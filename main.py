@@ -12,12 +12,15 @@ import sfz_gen
 import math
 import time
 
-
-def in_rect(rect):
-  x,y,w,h = rect
+def get_canvas_mouse_pos():
   mx,my = pygame.mouse.get_pos()
   mx/=2
   my/=2
+  return mx, my
+
+def in_rect(rect):
+  x,y,w,h = rect
+  mx,my = get_canvas_mouse_pos()
   if mx >= x and mx < x+w and my >= y and my < y+h:
     return True
   return False
@@ -52,9 +55,7 @@ class WaveEditor(GUIElement):
         sh=sample*ph
         pygame.draw.rect(canvas,COLORS[5],(x+i*w/self.wave_width,y+h-sh-ph,pw,ph))
   def edit(self):
-    mx,my = pygame.mouse.get_pos()
-    mx/=2
-    my/=2
+    mx,my = get_canvas_mouse_pos()
     if pygame.mouse.get_pressed()[0]:
       wx = int((mx-self.rect[0])/self.rect[2]*self.wave_width)
       wy = self.wave_height-1-int((my-self.rect[1])/self.rect[3]*self.wave_height)
@@ -103,9 +104,8 @@ class NumberEditor(GUIElement):
       canvas.blit(self.rendered_text,(self.rect[0]+6,self.rect[1]))
   def edit(self):
     if time.time() > self.edit_timer:
-      mx,my = pygame.mouse.get_pos()
-      mx/=2
-      my/=2
+      mx,my = get_canvas_mouse_pos()
+
       if mx > self.rect[0]+self.rect[2]/2:
         self.value+=1
       else:
@@ -136,9 +136,7 @@ class RadioButton(GUIElement):
       for i,option in enumerate(self.options):
         canvas.blit(self.rendered_text[i],(self.rect[0]+i*8*self.width,self.rect[1]))
   def edit(self):
-    mx,my = pygame.mouse.get_pos()
-    mx/=2
-    my/=2
+    mx,_ = get_canvas_mouse_pos()
     sx = int((mx-self.rect[0])/8)
     if sx < 0:
       sx = 0
@@ -153,7 +151,7 @@ canvas_height = 160
 
 screen = pygame.display.set_mode((canvas_width*2,canvas_height*2))
 canvas = pygame.Surface((canvas_width,canvas_height))
-pygame.display.set_caption("QuiSFZ")
+pygame.display.set_caption("BitSFZ")
 
 exit = False
 
@@ -219,7 +217,7 @@ while not exit:
         if lgui[control].selected:
           lgui[control].selected = False
           if control == "wave_preset":
-            mx,my = event.pos
+            mx,my = get_canvas_mouse_pos()
             lgui["wave_editor"].preset(int(mx/24))
             
           export("live.sfz","out")
