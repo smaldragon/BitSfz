@@ -1,0 +1,24 @@
+// Auto Generated file by sfz_gen.py
+// 0.20134207292674888
+<control>
+<global>
+loop_mode=loop_continuous
+<group>
+ampeg_delay=0.0
+ampeg_attack=0.1331
+ampeg_hold=0.0
+ampeg_decay=12.5
+ampeg_sustain=90
+ampeg_release=12.5
+pitchlfo_delay=0.0
+pitchlfo_fade=0.0
+pitchlfo_depth=0
+pitchlfo_freq=0
+tune=0
+pan=0
+<region> sample=samples/live_A_0.wav lokey=0 hikey=47 pitch_keycenter=57
+<region> sample=samples/live_A_1.wav lokey=48 hikey=59 pitch_keycenter=57
+<region> sample=samples/live_A_2.wav lokey=60 hikey=71 pitch_keycenter=57
+<region> sample=samples/live_A_3.wav lokey=72 hikey=83 pitch_keycenter=57
+<region> sample=samples/live_A_4.wav lokey=84 hikey=96 pitch_keycenter=57
+<region> sample=samples/live_A_5.wav lokey=97 hikey=127 pitch_keycenter=57
