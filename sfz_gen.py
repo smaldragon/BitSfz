@@ -18,12 +18,17 @@ def generate_file(filename,directory,data):
     #os.makedirs(path, exist_ok=True)
     with open(f"{directory+'/'+filename}","w") as f:
         f.write("// Auto Generated file by sfz_gen.py\n")
-        f.write(f"// {random.random()}\n")
+        f.write("//")
+        for l in range(4):
+            for i,name in enumerate(data[l]):
+                if data[l][name].value is not None:
+                    f.write(f" {l}:{name}:{data[l][name].value};")
+        f.write("\n")
         f.write("<control>\n")
         f.write("<global>\n")
         f.write("loop_mode=loop_continuous\n")
         for i,settings in enumerate(data):
-            if settings["wave_editor"].wave_data != [0]*32:
+            if settings["wave_editor"].value != [0]*32:
                 f.write("<group>\n")
                 f.write(f'ampeg_delay={convert(settings["ampeg_delay"].value)}\n')
                 f.write(f'ampeg_attack={convert(settings["ampeg_attack"].value)}\n')

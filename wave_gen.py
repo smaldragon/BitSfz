@@ -84,7 +84,10 @@ def generate_tables(filename,directory,source,depth,layer):
         #plt.show()
 
     for i,table in enumerate(tabl):
-        save_path=f'{directory}/samples/'
+        if directory != "":
+            save_path=f'{directory}/samples/'
+        else:
+            save_path=f'samples/'
         os.makedirs(save_path, exist_ok=True) 
         obj = wave.open(f'{save_path}{filename[:-4]}_{"ABCD"[layer]}_{i}.wav','w')
         obj.setnchannels(1) # mono
