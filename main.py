@@ -11,6 +11,9 @@ import wave_gen
 import sfz_gen
 from colors import *
 
+#============================
+# I/O Functions
+#============================
 current_file = None
 current_path = None
 
@@ -27,8 +30,7 @@ def export(filename=None,directory=None):
 
   if current_file is not None and current_path is not None:
     wave_gen.generate_tables(filename,directory,lgui["wave_editor"].value,lgui["wave_editor"].wave_height,layer)
-    sfz_gen.generate_file(filename,directory,layer_gui)
-    
+    sfz_gen.generate_file(filename,directory,layer_gui)   
 
 def load(path):
   global current_file
@@ -57,18 +59,21 @@ def load_dialog():
   path=filedialog.askopenfilename(filetypes=types)
   load(path)
 
+#============================
+# Defining all UI Elements
+#============================
 screen = pygame.display.set_mode((canvas_width*canvas_scale,canvas_height*canvas_scale))
 pygame.display.set_caption("BitSFZ")
+icon = pygame.image.load("icon.png")
+pygame.display.set_icon(icon)
 
 EDITOR_X,EDITOR_Y = 0,8
-
 gui = {}
 layer_gui = []
 for i in range(4):
   lgui = {}
   lgui["wave_label"] = Label((0,0+EDITOR_Y),".Wave",4)
   lgui["wave_editor"] = WaveEditor((8,16+EDITOR_Y,128,64))
-  #lgui["wave_preset"] = Label((2,80+EDITOR_Y,144,16),"Noi 50% 25% Tri Saw Was",3)
   lgui["noise_button"] = Button((2,80+EDITOR_Y,18,12),"Nil",3,4,lgui["wave_editor"].preset,0)
   lgui["50%_button"] = Button((2+24,80+EDITOR_Y,18,12),"50%",3,4,lgui["wave_editor"].preset,1)
   lgui["25%_button"] = Button((2+48,80+EDITOR_Y,18,12),"25%",3,4,lgui["wave_editor"].preset,2)
