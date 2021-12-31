@@ -47,5 +47,6 @@ def generate_file(filename,directory,data):
 
                 for u in range(6):
                     l = ["A","B","C","D"][i]
-                    f.write(f"<region> sample=samples/live_{l}_{u}.wav lokey={REGION_NOTES[u][0]} hikey={REGION_NOTES[u][1]} pitch_keycenter={57}")
+                    n = filename[:-4]
+                    f.write(f"<region> sample=samples/{n}_{l}_{u}.wav lokey={REGION_NOTES[u][0]} hikey={REGION_NOTES[u][1]} pitch_keycenter={57}")
                     f.write("\n")
