@@ -53,7 +53,7 @@ def generate_file(filename,directory,data):
                 f.write(f'pitchlfo_freq={settings["pitchlfo_freq"].value}\n')
 
                 f.write(f'volume={(settings["volume"].value-93)}\n')
-                f.write(f'transpose={(settings["transpose"].value-51)}\n')
+                f.write(f'transpose={(settings["transpose"].value-50)}\n')
                 f.write(f'tune={(settings["tune"].value-50)*2}\n')
                 f.write(f'pan={settings["pan"].value-50}\n')
 

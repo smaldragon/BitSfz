@@ -223,3 +223,4 @@ while not exit:
 
 pygame.display.quit()
 pygame.quit()
+root.quit()
