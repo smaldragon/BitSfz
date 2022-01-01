@@ -3,11 +3,11 @@ from colors import *
 import time
 pygame.init()
 
-canvas_width  = 144
-canvas_height = 168
+canvas_width  = 192
+canvas_height = 192
 canvas_scale  = 2
 
-font = pygame.font.Font("fonts/monogram-extended.ttf",16)
+font = pygame.font.Font("assets/monogram-extended.ttf",16)
 canvas = pygame.Surface((canvas_width,canvas_height))
 
 def get_canvas_mouse_pos():
@@ -44,19 +44,27 @@ class WaveEditor(GUIElement):
       self.value = [0]*self.wave_width
       self._none_txt = font.render("(none)",True,COLORS[3])
       self._noise_txt = font.render("(white noise)",True,COLORS[3])
+      self._noise_value = 1
   def draw(self):
       x,y,w,h=self.rect
       pw=w/self.wave_width
       ph=h/self.wave_height
       pygame.draw.rect(canvas,COLORS[1],self.rect)
+      
+      noise = True
       if self.value == [0]*self.wave_width:
         canvas.blit(self._none_txt,(x+50,y+10))
+        noise = False
 
-      if self.value == [15]*self.wave_width:
-        canvas.blit(self._noise_txt,(x+28,y+10))
+      last_sample = self.value[0]
       for i,sample in enumerate(self.value):
+        if sample != last_sample:
+          noise = False
+        last_sample=sample
         sh=sample*ph
         pygame.draw.rect(canvas,COLORS[5],(x+i*w/self.wave_width,y+h-sh-ph,pw,ph))
+      if noise:
+        canvas.blit(self._noise_txt,(x+24,y+10))
   def edit(self):
     mx,my = get_canvas_mouse_pos()
     if pygame.mouse.get_pressed()[0]:
@@ -71,19 +79,22 @@ class WaveEditor(GUIElement):
       if wy>=self.wave_height:
         wy=self.wave_height-1
       self.value[wx]=wy
+  def set_noise(self,value):
+    self.value = [value]*32
   def preset(self,preset):
     presets = [
-      [0]*32,
       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15],
       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,15,15,15,15,15,15,15],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,15,15,15],
       [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0],
       [0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13,14,14,15,15],
       [15,15,14,14,13,13,12,12,11,11,10,10,9,9,8,8,7,7,6,6,5,5,4,4,3,3,2,2,1,1,0,0],
     ]
     self.value=presets[preset]
 class Label(GUIElement):
-  def __init__(self, rect,text,color) -> None:
+  def __init__(self, rect,text,color,offset=(0,0)) -> None:
       super().__init__(rect)
+      self.xo,self.yo = offset
       self.text  = text
       self.color = color
       self._render_text()
@@ -96,7 +107,7 @@ class Label(GUIElement):
           self._render_text()
           self._last_text = self.text
           self._last_color = self.color
-      canvas.blit(self.rendered_text,(self.rect[0],self.rect[1]))
+      canvas.blit(self.rendered_text,(self.rect[0]+self.xo,self.rect[1]+self.yo))
 class NumberEditor(GUIElement):
   def __init__(self, rect,value,min_value=0,max_value=99) -> None:
       super().__init__((rect[0],rect[1],24,16))
@@ -157,8 +168,8 @@ class RadioButton(GUIElement):
       sx = len(self.options)-1
     self.value = sx
 class Button(Label):
-    def __init__(self, rect, text, color,sel_color,function,args=None) -> None:
-        super().__init__(rect, text, color)
+    def __init__(self, rect, text, color,sel_color,function,args=None,offset=(0,0)) -> None:
+        super().__init__(rect, text, color,offset=offset)
         self.function = function
         self.args = args
         self._desel_color = color

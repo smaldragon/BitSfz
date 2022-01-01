@@ -31,22 +31,42 @@ def generate_file(filename,directory,data):
             if settings["wave_editor"].value != [0]*32:
                 f.write("<group>\n")
                 f.write(f'ampeg_delay={convert(settings["ampeg_delay"].value)}\n')
+                f.write(f'ampeg_start={settings["ampeg_start"].value}\n')
                 f.write(f'ampeg_attack={convert(settings["ampeg_attack"].value)}\n')
                 f.write(f'ampeg_hold={convert(settings["ampeg_hold"].value)}\n')
                 f.write(f'ampeg_decay={convert(settings["ampeg_decay"].value)}\n')
                 f.write(f'ampeg_sustain={settings["ampeg_sustain"].value}\n')
                 f.write(f'ampeg_release={convert(settings["ampeg_release"].value)}\n')
 
+                f.write(f'pitcheg_delay={convert(settings["pitcheg_delay"].value)}\n')
+                f.write(f'pitcheg_start={settings["pitcheg_start"].value}\n')
+                f.write(f'pitcheg_attack={convert(settings["pitcheg_attack"].value)}\n')
+                f.write(f'pitcheg_hold={convert(settings["pitcheg_hold"].value)}\n')
+                f.write(f'pitcheg_decay={convert(settings["pitcheg_decay"].value)}\n')
+                f.write(f'pitcheg_sustain={settings["pitcheg_sustain"].value}\n')
+                f.write(f'pitcheg_release={convert(settings["pitcheg_release"].value)}\n')
+                f.write(f'pitcheg_depth={(settings["pitcheg_depth"].value-50)*2400}\n')
+
                 f.write(f'pitchlfo_delay={convert(settings["pitchlfo_delay"].value)}\n')
                 f.write(f'pitchlfo_fade={convert(settings["pitchlfo_fade"].value)}\n')
                 f.write(f'pitchlfo_depth={settings["pitchlfo_depth"].value}\n')
                 f.write(f'pitchlfo_freq={settings["pitchlfo_freq"].value}\n')
 
+                f.write(f'volume={(settings["volume"].value-93)}\n')
+                f.write(f'transpose={(settings["transpose"].value-51)}\n')
                 f.write(f'tune={(settings["tune"].value-50)*2}\n')
                 f.write(f'pan={settings["pan"].value-50}\n')
 
-                for u in range(6):
-                    l = ["A","B","C","D"][i]
-                    n = filename[:-4]
-                    f.write(f"<region> sample=samples/{n}_{l}_{u}.wav lokey={REGION_NOTES[u][0]} hikey={REGION_NOTES[u][1]} pitch_keycenter={57}")
-                    f.write("\n")
+                n = filename[:-4]
+                l = ["A","B","C","D"][i]
+                noise = False
+                for noi in range(16):
+                    if settings["wave_editor"].value == [noi]*32:
+                        noise = True
+                        if noi > 0:
+                            f.write(f"<region> sample=samples/{n}_{l}_N.wav lokey=0 hikey=127 pitch_keycenter={57}")
+                            f.write("\n")
+                if not noise:
+                    for u in range(6):
+                        f.write(f"<region> sample=samples/{n}_{l}_{u}.wav lokey={REGION_NOTES[u][0]} hikey={REGION_NOTES[u][1]} pitch_keycenter={57}")
+                        f.write("\n")

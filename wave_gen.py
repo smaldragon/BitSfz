@@ -97,3 +97,25 @@ def generate_tables(filename,directory,source,depth,layer):
             data = struct.pack('<h',int(sample*0x8FFF))
             obj.writeframesraw( data )  
         obj.close()
+
+def generate_noise(filename,directory,layer,level):
+    if directory != "":
+        save_path=f'{directory}/samples/'
+    else:
+        save_path=f'samples/'
+    os.makedirs(save_path, exist_ok=True) 
+    obj = wave.open(f'{save_path}{filename[:-4]}_{"ABCD"[layer]}_N.wav','w')
+    obj.setnchannels(1) # mono
+    obj.setsampwidth(2)
+    obj.setframerate(56320.0)
+    noise = 1
+    print("generating noise")
+    for i in range(0xFFFF):
+        feedback=(noise&1)^((noise>>level)&1)
+        noise = noise >> 1
+        noise += feedback << 15
+        
+        data = struct.pack('<h',int((noise&1)*8000-4000))
+        obj.writeframesraw( data )  
+    obj.close()
+    print("generated noise")
