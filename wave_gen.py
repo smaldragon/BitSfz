@@ -5,6 +5,9 @@ import os
 import wave
 import struct
 
+from ctypes import *
+libWave = CDLL("./libWave.so")
+
 #import matplotlib.pyplot as plt
 class bw_low_pass():
     def __init__(self,order,s,f):
@@ -36,6 +39,16 @@ class bw_low_pass():
         return x
 
 def generate_tables(filename,directory,source,depth,layer):
+    '''
+    if directory != "":
+        save_path=f'{directory}/samples/'
+    else:
+        save_path=f'samples/'
+    for i in range(8):
+        filepath = f'{save_path}{filename[:-4]}_{"ABCD"[layer]}_{i}.wav'.encode('utf-8')
+        libWave.write_wave(filepath,i,(c_int16*32)(*source))
+    '''
+    
     table = []
     for sample in source:
         table.append(sample/depth)
@@ -103,6 +116,14 @@ def generate_noise(filename,directory,layer,level):
         save_path=f'{directory}/samples/'
     else:
         save_path=f'samples/'
+    
+    filepath = f'{save_path}{filename[:-4]}_{"ABCD"[layer]}_N.wav'.encode('utf-8')
+    libWave.write_noise(filepath,level)
+    '''
+    if directory != "":
+        save_path=f'{directory}/samples/'
+    else:
+        save_path=f'samples/'
     os.makedirs(save_path, exist_ok=True) 
     obj = wave.open(f'{save_path}{filename[:-4]}_{"ABCD"[layer]}_N.wav','w')
     obj.setnchannels(1) # mono
@@ -115,7 +136,8 @@ def generate_noise(filename,directory,layer,level):
         noise = noise >> 1
         noise += feedback << 15
         
-        data = struct.pack('<h',int((noise&1)*8000-4000))
+        data = struct.pack('<h',int((noise&1)*8000-4000)) * 16
         obj.writeframesraw( data )  
     obj.close()
     print("generated noise")
+    '''

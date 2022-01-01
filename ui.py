@@ -7,6 +7,7 @@ canvas_width  = 192
 canvas_height = 192
 canvas_scale  = 2
 
+font_tiny = pygame.font.Font("assets/m3x6.ttf",16)
 font = pygame.font.Font("assets/monogram-extended.ttf",16)
 canvas = pygame.Surface((canvas_width,canvas_height))
 
@@ -30,6 +31,8 @@ class GUIElement():
       self.rect     = rect
       self.selected = False
       self.value = None
+  def _draw_value(self):
+    pass
   def draw(self):
     pass
   def edit(self):
@@ -43,7 +46,7 @@ class WaveEditor(GUIElement):
       self.wave_height = (64,32,16,8,4,2)[2]
       self.value = [0]*self.wave_width
       self._none_txt = font.render("(none)",True,COLORS[3])
-      self._noise_txt = font.render("(white noise)",True,COLORS[3])
+      self._noise_txt = font.render("(noise)",True,COLORS[3])
       self._noise_value = 1
   def draw(self):
       x,y,w,h=self.rect
@@ -53,7 +56,7 @@ class WaveEditor(GUIElement):
       
       noise = True
       if self.value == [0]*self.wave_width:
-        canvas.blit(self._none_txt,(x+50,y+10))
+        canvas.blit(self._none_txt,(x+62,y-12))
         noise = False
 
       last_sample = self.value[0]
@@ -64,7 +67,7 @@ class WaveEditor(GUIElement):
         sh=sample*ph
         pygame.draw.rect(canvas,COLORS[5],(x+i*w/self.wave_width,y+h-sh-ph,pw,ph))
       if noise:
-        canvas.blit(self._noise_txt,(x+24,y+10))
+        canvas.blit(self._noise_txt,(x+56,y-12))
   def edit(self):
     mx,my = get_canvas_mouse_pos()
     if pygame.mouse.get_pressed()[0]:
@@ -92,16 +95,20 @@ class WaveEditor(GUIElement):
     ]
     self.value=presets[preset]
 class Label(GUIElement):
-  def __init__(self, rect,text,color,offset=(0,0)) -> None:
+  def __init__(self, rect,text,color,offset=(0,0),tiny=False) -> None:
       super().__init__(rect)
       self.xo,self.yo = offset
       self.text  = text
       self.color = color
+      self.tiny = tiny
       self._render_text()
       self._last_text = text
       self._last_color = color
   def _render_text(self):
-      self.rendered_text = font.render(self.text,True,COLORS[self.color])
+      if self.tiny:
+        self.rendered_text = font_tiny.render(self.text,True,COLORS[self.color])
+      else:
+        self.rendered_text = font.render(self.text,True,COLORS[self.color])
   def draw(self):
       if self._last_text != self.text or self._last_color != self.color:
           self._render_text()

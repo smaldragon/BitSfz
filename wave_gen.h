@@ -1,0 +1,1 @@
+int write_noise(char* filename, int level);

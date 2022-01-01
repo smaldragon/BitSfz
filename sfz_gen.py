@@ -45,7 +45,7 @@ def generate_file(filename,directory,data):
                 f.write(f'pitcheg_decay={convert(settings["pitcheg_decay"].value)}\n')
                 f.write(f'pitcheg_sustain={settings["pitcheg_sustain"].value}\n')
                 f.write(f'pitcheg_release={convert(settings["pitcheg_release"].value)}\n')
-                f.write(f'pitcheg_depth={(settings["pitcheg_depth"].value-50)*2400}\n')
+                f.write(f'pitcheg_depth={((settings["pitcheg_depth"].value-50)/100)*4800}\n')
 
                 f.write(f'pitchlfo_delay={convert(settings["pitchlfo_delay"].value)}\n')
                 f.write(f'pitchlfo_fade={convert(settings["pitchlfo_fade"].value)}\n')
@@ -53,7 +53,7 @@ def generate_file(filename,directory,data):
                 f.write(f'pitchlfo_freq={settings["pitchlfo_freq"].value}\n')
 
                 f.write(f'volume={(settings["volume"].value-93)}\n')
-                f.write(f'transpose={(settings["transpose"].value-50)}\n')
+                f.write(f'transpose={settings["transpose"].value-50}\n')
                 f.write(f'tune={(settings["tune"].value-50)*2}\n')
                 f.write(f'pan={settings["pan"].value-50}\n')
 

@@ -54,6 +54,7 @@ def load(path):
         if item != "":
           layer,name,value = item.strip().split(":")
           layer_gui[int(layer)][name].value = ast.literal_eval(value)
+          layer_gui[int(layer)][name]._draw_value()
 
 def save_dialog():
   types = [('SFZ File', '.sfz')]
@@ -84,31 +85,33 @@ layer_gui = []
 for i in range(4):
   lgui = {}
   lgui["wave_label"] = Label((0,0+EDITOR_Y),".Wave",4)
-  lgui["wave_editor"] = WaveEditor((8,16+EDITOR_Y,128,64))
+  lgui["wave_editor"] = WaveEditor((8,14+EDITOR_Y,128,64))
 
-  lgui["wave_f_button"] = Button((3,EDITOR_Y+15,4,4),"→",3,7,lgui["wave_editor"].set_noise,15,offset=(0,-6))
-  lgui["wave_e_button"] = Button((3,EDITOR_Y+19,4,4),"→",3,7,lgui["wave_editor"].set_noise,14,offset=(0,-6))
-  lgui["wave_d_button"] = Button((3,EDITOR_Y+23,4,4),"→",3,7,lgui["wave_editor"].set_noise,13,offset=(0,-6))
-  lgui["wave_c_button"] = Button((3,EDITOR_Y+27,4,4),"→",3,7,lgui["wave_editor"].set_noise,12,offset=(0,-6))
-  lgui["wave_b_button"] = Button((3,EDITOR_Y+31,4,4),"→",3,7,lgui["wave_editor"].set_noise,11,offset=(0,-6))
-  lgui["wave_a_button"] = Button((3,EDITOR_Y+35,4,4),"→",3,7,lgui["wave_editor"].set_noise,10,offset=(0,-6))
-  lgui["wave_9_button"] = Button((3,EDITOR_Y+39,4,4),"→",3,7,lgui["wave_editor"].set_noise,9,offset=(0,-6))
-  lgui["wave_8_button"] = Button((3,EDITOR_Y+43,4,4),"→",3,7,lgui["wave_editor"].set_noise,8,offset=(0,-6))
-  lgui["wave_7_button"] = Button((3,EDITOR_Y+47,4,4),"→",3,7,lgui["wave_editor"].set_noise,7,offset=(0,-6))
-  lgui["wave_6_button"] = Button((3,EDITOR_Y+51,4,4),"→",3,7,lgui["wave_editor"].set_noise,6,offset=(0,-6))
-  lgui["wave_5_button"] = Button((3,EDITOR_Y+55,4,4),"→",3,7,lgui["wave_editor"].set_noise,5,offset=(0,-6))
-  lgui["wave_4_button"] = Button((3,EDITOR_Y+59,4,4),"→",3,7,lgui["wave_editor"].set_noise,4,offset=(0,-6))
-  lgui["wave_3_button"] = Button((3,EDITOR_Y+63,4,4),"→",3,7,lgui["wave_editor"].set_noise,3,offset=(0,-6))
-  lgui["wave_2_button"] = Button((3,EDITOR_Y+67,4,4),"→",3,7,lgui["wave_editor"].set_noise,2,offset=(0,-6))
-  lgui["wave_1_button"] = Button((3,EDITOR_Y+71,4,4),"→",3,7,lgui["wave_editor"].set_noise,1,offset=(0,-6))
-  lgui["wave_0_button"] = Button((3,EDITOR_Y+75,4,4),"→",3,7,lgui["wave_editor"].set_noise,0,offset=(0,-6))
+  lgui["wave_f_button"] = Button((3,EDITOR_Y+15-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,15,offset=(0,-6))
+  lgui["wave_e_button"] = Button((3,EDITOR_Y+19-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,14,offset=(0,-6))
+  lgui["wave_d_button"] = Button((3,EDITOR_Y+23-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,13,offset=(0,-6))
+  lgui["wave_c_button"] = Button((3,EDITOR_Y+27-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,12,offset=(0,-6))
+  lgui["wave_b_button"] = Button((3,EDITOR_Y+31-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,11,offset=(0,-6))
+  lgui["wave_a_button"] = Button((3,EDITOR_Y+35-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,10,offset=(0,-6))
+  lgui["wave_9_button"] = Button((3,EDITOR_Y+39-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,9,offset=(0,-6))
+  lgui["wave_8_button"] = Button((3,EDITOR_Y+43-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,8,offset=(0,-6))
+  lgui["wave_7_button"] = Button((3,EDITOR_Y+47-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,7,offset=(0,-6))
+  lgui["wave_6_button"] = Button((3,EDITOR_Y+51-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,6,offset=(0,-6))
+  lgui["wave_5_button"] = Button((3,EDITOR_Y+55-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,5,offset=(0,-6))
+  lgui["wave_4_button"] = Button((3,EDITOR_Y+59-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,4,offset=(0,-6))
+  lgui["wave_3_button"] = Button((3,EDITOR_Y+63-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,3,offset=(0,-6))
+  lgui["wave_2_button"] = Button((3,EDITOR_Y+67-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,2,offset=(0,-6))
+  lgui["wave_1_button"] = Button((3,EDITOR_Y+71-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,1,offset=(0,-6))
+  lgui["wave_0_button"] = Button((3,EDITOR_Y+75-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,0,offset=(0,-6))
 
-  lgui["wave_50%_button"] = Button((4,80+EDITOR_Y,18,12),"50%",3,4,lgui["wave_editor"].preset,0)
-  lgui["wave_25%_button"] = Button((2+24,80+EDITOR_Y,18,12),"25%",3,4,lgui["wave_editor"].preset,1)
-  lgui["wave_12%_button"] = Button((2+48,80+EDITOR_Y,18,12),"12%",3,4,lgui["wave_editor"].preset,2)
-  lgui["wave_triangle_button"] = Button((2+72,80+EDITOR_Y,18,12),"Tri",3,4,lgui["wave_editor"].preset,3)
-  lgui["wave_saw_button"] = Button((2+96,80+EDITOR_Y,18,12),"Saw",3,4,lgui["wave_editor"].preset,4)
-  lgui["wave_was_button"] = Button((2+120,80+EDITOR_Y,18,12),"Was",3,4,lgui["wave_editor"].preset,5)
+  lgui["wave_data_label"] = Label((8,73+EDITOR_Y),"00000000000000000000000000000000",2,tiny=True)
+
+  lgui["wave_50%_button"] = Button((4,82+EDITOR_Y,18,12),"50%",3,4,lgui["wave_editor"].preset,0)
+  lgui["wave_25%_button"] = Button((2+24,82+EDITOR_Y,18,12),"25%",3,4,lgui["wave_editor"].preset,1)
+  lgui["wave_12%_button"] = Button((2+48,82+EDITOR_Y,18,12),"12%",3,4,lgui["wave_editor"].preset,2)
+  lgui["wave_triangle_button"] = Button((2+72,82+EDITOR_Y,18,12),"Tri",3,4,lgui["wave_editor"].preset,3)
+  lgui["wave_saw_button"] = Button((2+96,82+EDITOR_Y,18,12),"Saw",3,4,lgui["wave_editor"].preset,4)
+  lgui["wave_was_button"] = Button((2+120,82+EDITOR_Y,18,12),"Was",3,4,lgui["wave_editor"].preset,5)
   # .Amplitude
   lgui["ampeg_label"] = Label((0,90+EDITOR_Y,0,0),".Amplitude",4)
   lgui["ampeg_delay"] = NumberEditor((0,100+EDITOR_Y,24,16),0)
@@ -150,7 +153,7 @@ for i in range(4):
   layer_gui.append(lgui)
 
 
-gui["layer"] = RadioButton((106,4+EDITOR_Y),["A","B","C","D"],0)
+gui["layer"] = RadioButton((106,2+EDITOR_Y),["A","B","C","D"],0)
 gui["selected_file"] = Label((2,-3),str(current_file),4)
 gui["save_button"] = Button((168,-2,24,12),"SAVE",4,5,save_dialog)
 gui["load_button"] = Button((140,-2,24,12),"LOAD",4,5,load_dialog)
@@ -204,16 +207,22 @@ while not exit:
   canvas.fill(COLORS[0])
   pygame.draw.rect(canvas,COLORS[2],(0,0,canvas_width,10))
   
+  lgui = layer_gui[gui["layer"].value]
   gui["selected_file"].text = current_file
 
+  wave_data_label=""
+  for v in lgui["wave_editor"].value:
+    wave_data_label+="0123456789ABCDEF"[v]
+  lgui["wave_data_label"].text=wave_data_label
+  
   for control in gui:
     gui[control].draw()
     if gui[control].selected:
       gui[control].edit()
-  for control in layer_gui[gui["layer"].value]:
-    layer_gui[gui["layer"].value][control].draw()
-    if layer_gui[gui["layer"].value][control].selected:
-      layer_gui[gui["layer"].value][control].edit()
+  for control in lgui:
+    lgui[control].draw()
+    if lgui[control].selected:
+      lgui[control].edit()
 
   # Scaling
   #------
