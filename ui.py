@@ -1,3 +1,4 @@
+import wave
 import pygame
 from colors import *
 import time
@@ -40,10 +41,11 @@ class GUIElement():
   def select(self,sel):
       self.selected = sel
 class WaveEditor(GUIElement):
-  def __init__(self, rect) -> None:
+  def __init__(self, rect,wave_color=5) -> None:
       super().__init__(rect)
       self.wave_width  = (128,64,32,16,8,4)[2]
       self.wave_height = (64,32,16,8,4,2)[2]
+      self.wave_color = wave_color
       self.value = [0]*self.wave_width
       self._none_txt = font.render("(none)",True,COLORS[3])
       self._noise_txt = font.render("(noise)",True,COLORS[3])
@@ -65,7 +67,7 @@ class WaveEditor(GUIElement):
           noise = False
         last_sample=sample
         sh=sample*ph
-        pygame.draw.rect(canvas,COLORS[5],(x+i*w/self.wave_width,y+h-sh-ph,pw,ph))
+        pygame.draw.rect(canvas,COLORS[self.wave_color],(x+i*w/self.wave_width,y+h-sh-ph,pw,ph))
       if noise:
         canvas.blit(self._noise_txt,(x+56,y-12))
   def edit(self):
@@ -116,12 +118,12 @@ class Label(GUIElement):
           self._last_color = self.color
       canvas.blit(self.rendered_text,(self.rect[0]+self.xo,self.rect[1]+self.yo))
 class NumberEditor(GUIElement):
-  def __init__(self, rect,value,min_value=0,max_value=99) -> None:
+  def __init__(self, rect,value,min_value=0,max_value=99,arrow_color=5) -> None:
       super().__init__((rect[0],rect[1],24,16))
       self.value = value
       self.min_value = min_value
       self.max_value = max_value
-      self.rendered_arrows = font.render("←  →",True,COLORS[5])
+      self.rendered_arrows = font.render("←  →",True,COLORS[arrow_color])
       self._draw_value()
 
       self.edit_timer = 0

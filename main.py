@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from tkinter.constants import CHECKBUTTON
 import pygame
 from pygame.constants import K_LCTRL, MOUSEBUTTONUP, K_e, K_o, K_s
 import tkinter as tk
@@ -14,9 +15,6 @@ from colors import *
 #============================
 # I/O Functions
 #============================
-current_file = None
-current_path = None
-
 def export(filename=None,directory=None,export_wave=False):
   global current_file
   global current_path
@@ -71,6 +69,31 @@ def load_dialog():
   if path != ():
     load(path)
 
+def gather_data(layer):
+  global layer_gui
+  lgui = layer_gui[layer].copy()
+  data = {}
+  for element_name in lgui:
+    element=lgui[element_name]
+    if element.value is not None:
+      data[element_name] = element.value
+  return data.copy()
+def copy():
+  global clipboard
+  clipboard = gather_data(gui["layer"].value).copy()
+  print(clipboard)
+
+def paste():
+  global clipboard
+  global layer_gui
+  clip = clipboard.copy()
+  if clip is not None:
+    for element in clip:
+      layer_gui[gui["layer"].value][element].value = clip[element]
+
+current_file = "live.sfz"
+current_path = "out/"
+
 #============================
 # Defining all UI Elements
 #============================
@@ -82,10 +105,12 @@ pygame.display.set_icon(icon)
 EDITOR_X,EDITOR_Y = 0,8
 gui = {}
 layer_gui = []
+clipboard = None
 for i in range(4):
+  highlight_color = [5,19,15,30][i]
   lgui = {}
   lgui["wave_label"] = Label((0,0+EDITOR_Y),".Wave",4)
-  lgui["wave_editor"] = WaveEditor((8,14+EDITOR_Y,128,64))
+  lgui["wave_editor"] = WaveEditor((8,14+EDITOR_Y,128,64),wave_color=highlight_color)
 
   lgui["wave_f_button"] = Button((3,EDITOR_Y+15-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,15,offset=(0,-6))
   lgui["wave_e_button"] = Button((3,EDITOR_Y+19-2,4,4),"→",3,7,lgui["wave_editor"].set_noise,14,offset=(0,-6))
@@ -114,40 +139,40 @@ for i in range(4):
   lgui["wave_was_button"] = Button((2+120,82+EDITOR_Y,18,12),"Was",3,4,lgui["wave_editor"].preset,5)
   # .Amplitude
   lgui["ampeg_label"] = Label((0,90+EDITOR_Y,0,0),".Amplitude",4)
-  lgui["ampeg_delay"] = NumberEditor((0,100+EDITOR_Y,24,16),0)
-  lgui["ampeg_start"] = NumberEditor((24,100+EDITOR_Y,24,16),0)
-  lgui["ampeg_attack"] = NumberEditor((48,100+EDITOR_Y,24,16),8)
-  lgui["ampeg_hold"] = NumberEditor((72,100+EDITOR_Y,24,16),0)
-  lgui["ampeg_decay"] = NumberEditor((96,100+EDITOR_Y,24,16),8)
-  lgui["ampeg_sustain"] = NumberEditor((120,100+EDITOR_Y,24,16),80)
-  lgui["ampeg_release"] = NumberEditor((144,100+EDITOR_Y,24,16),8)
+  lgui["ampeg_delay"] = NumberEditor((0,100+EDITOR_Y,24,16),0,arrow_color=highlight_color)
+  lgui["ampeg_start"] = NumberEditor((24,100+EDITOR_Y,24,16),0,arrow_color=highlight_color)
+  lgui["ampeg_attack"] = NumberEditor((48,100+EDITOR_Y,24,16),8,arrow_color=highlight_color)
+  lgui["ampeg_hold"] = NumberEditor((72,100+EDITOR_Y,24,16),0,arrow_color=highlight_color)
+  lgui["ampeg_decay"] = NumberEditor((96,100+EDITOR_Y,24,16),8,arrow_color=highlight_color)
+  lgui["ampeg_sustain"] = NumberEditor((120,100+EDITOR_Y,24,16),80,arrow_color=highlight_color)
+  lgui["ampeg_release"] = NumberEditor((144,100+EDITOR_Y,24,16),8,arrow_color=highlight_color)
   lgui["ampeg_desc"]=Label((4,110+EDITOR_Y),"Del Str Atk Hol Dec Sus Rel",2)
   # .Pitch
   lgui["pitcheg_label"] = Label((0,120+EDITOR_Y),".Pitch",4)
-  lgui["pitcheg_delay"] = NumberEditor((0,130+EDITOR_Y,24,16),0)
-  lgui["pitcheg_start"] = NumberEditor((24,130+EDITOR_Y,24,16),0)
-  lgui["pitcheg_attack"] = NumberEditor((48,130+EDITOR_Y,24,16),0)
-  lgui["pitcheg_hold"] = NumberEditor((72,130+EDITOR_Y,24,16),0)
-  lgui["pitcheg_decay"] = NumberEditor((96,130+EDITOR_Y,24,16),0)
-  lgui["pitcheg_sustain"] = NumberEditor((120,130+EDITOR_Y,24,16),0)
-  lgui["pitcheg_release"] = NumberEditor((144,130+EDITOR_Y,24,16),0)
-  lgui["pitcheg_depth"] = NumberEditor((168,130+EDITOR_Y),50)
+  lgui["pitcheg_delay"] = NumberEditor((0,130+EDITOR_Y,24,16),0,arrow_color=highlight_color)
+  lgui["pitcheg_start"] = NumberEditor((24,130+EDITOR_Y,24,16),0,arrow_color=highlight_color)
+  lgui["pitcheg_attack"] = NumberEditor((48,130+EDITOR_Y,24,16),0,arrow_color=highlight_color)
+  lgui["pitcheg_hold"] = NumberEditor((72,130+EDITOR_Y,24,16),0,arrow_color=highlight_color)
+  lgui["pitcheg_decay"] = NumberEditor((96,130+EDITOR_Y,24,16),0,arrow_color=highlight_color)
+  lgui["pitcheg_sustain"] = NumberEditor((120,130+EDITOR_Y,24,16),0,arrow_color=highlight_color)
+  lgui["pitcheg_release"] = NumberEditor((144,130+EDITOR_Y,24,16),0,arrow_color=highlight_color)
+  lgui["pitcheg_depth"] = NumberEditor((168,130+EDITOR_Y),50,arrow_color=highlight_color)
   lgui["pitcheg_desc"]=Label((4,140+EDITOR_Y),"Del Str Atk Hol Dec Sus Rel Dep",2)
 
   lgui["side_label"]=Label((135,EDITOR_Y+10),".General",4)
-  lgui["volume"]=NumberEditor((140,EDITOR_Y+20),99)
-  lgui["pan"]=NumberEditor((164,EDITOR_Y+20),50)
+  lgui["volume"]=NumberEditor((140,EDITOR_Y+20),99,arrow_color=highlight_color)
+  lgui["pan"]=NumberEditor((164,EDITOR_Y+20),50,arrow_color=highlight_color)
   lgui["side_desc1"]=Label((143,EDITOR_Y+30),"Vol Pan",2)
-  lgui["tune"]=NumberEditor((140,EDITOR_Y+40),50)
-  lgui["transpose"]=NumberEditor((164,EDITOR_Y+40),50)
+  lgui["tune"]=NumberEditor((140,EDITOR_Y+40),50,arrow_color=highlight_color)
+  lgui["transpose"]=NumberEditor((164,EDITOR_Y+40),50,arrow_color=highlight_color)
   lgui["side_desc2"]=Label((143,EDITOR_Y+50),"Tun Tra",2)
 
   
   lgui["pitchlfo_label"] = Label((0,150+EDITOR_Y),".Vibrato",4)
-  lgui["pitchlfo_delay"]=NumberEditor((0,160+EDITOR_Y),0)
-  lgui["pitchlfo_fade"]=NumberEditor((24,160+EDITOR_Y),0)
-  lgui["pitchlfo_depth"]=NumberEditor((48,160+EDITOR_Y),0)
-  lgui["pitchlfo_freq"]=NumberEditor((72,160+EDITOR_Y),0,max_value=20)
+  lgui["pitchlfo_delay"]=NumberEditor((0,160+EDITOR_Y),0,arrow_color=highlight_color)
+  lgui["pitchlfo_fade"]=NumberEditor((24,160+EDITOR_Y),0,arrow_color=highlight_color)
+  lgui["pitchlfo_depth"]=NumberEditor((48,160+EDITOR_Y),0,arrow_color=highlight_color)
+  lgui["pitchlfo_freq"]=NumberEditor((72,160+EDITOR_Y),0,max_value=20,arrow_color=highlight_color)
   lgui["pitchlfo_desc"]=Label((4,170+EDITOR_Y,0,0),"Del Fad Dep Frq",2)
   
   layer_gui.append(lgui)
@@ -157,8 +182,13 @@ gui["layer"] = RadioButton((106,2+EDITOR_Y),["A","B","C","D"],0)
 gui["selected_file"] = Label((2,-3),str(current_file),4)
 gui["save_button"] = Button((168,-2,24,12),"SAVE",4,5,save_dialog)
 gui["load_button"] = Button((140,-2,24,12),"LOAD",4,5,load_dialog)
+#gui["copy_button"] = Button((155,EDITOR_Y+65,4*6,10),"COPY",4,5,copy)
+#gui["paste_button"] = Button((152,EDITOR_Y+75,4*6,10),"PASTE",4,5,paste)
 
-
+try:
+  load("out/live.sfz")
+except:
+  pass
 editor_selected = None
 exit = False
 
