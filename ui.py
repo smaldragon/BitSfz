@@ -50,6 +50,8 @@ class WaveEditor(GUIElement):
       self._none_txt = font.render("(none)",True,COLORS[3])
       self._noise_txt = font.render("(noise)",True,COLORS[3])
       self._noise_value = 1
+  def update(self):
+    pass
   def draw(self):
       x,y,w,h=self.rect
       pw=w/self.wave_width
@@ -127,6 +129,8 @@ class NumberEditor(GUIElement):
       self._draw_value()
 
       self.edit_timer = 0
+  def update(self):
+    self._draw_value()
   def _draw_value(self):
     extra = ""
     if self.value < 10:

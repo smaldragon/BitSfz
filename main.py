@@ -71,28 +71,36 @@ def load_dialog():
 
 def gather_data(layer):
   global layer_gui
-  lgui = layer_gui[layer].copy()
+  lgui = layer_gui[layer]
   data = {}
   for element_name in lgui:
     element=lgui[element_name]
     if element.value is not None:
-      data[element_name] = element.value
-  return data.copy()
+      if type(element.value) in (int,float,str):
+        data[element_name] = element.value
+      elif type(element.value) is list:
+        data[element_name] = element.value.copy()
+  return data
 def copy():
   global clipboard
-  clipboard = gather_data(gui["layer"].value).copy()
-  print(clipboard)
+  clipboard = gather_data(gui["layer"].value)
 
 def paste():
   global clipboard
   global layer_gui
-  clip = clipboard.copy()
-  if clip is not None:
-    for element in clip:
-      layer_gui[gui["layer"].value][element].value = clip[element]
+  if clipboard is not None:
+    for element in clipboard:
+      value = clipboard[element]
+      if type(value) in (int,float,str):
+        layer_gui[gui["layer"].value][element].value = value
+        layer_gui[gui["layer"].value][element].update()
+      elif type(value) is list:
+        layer_gui[gui["layer"].value][element].value = value.copy()
 
-current_file = "live.sfz"
-current_path = "out/"
+#current_file = "live.sfz"
+#current_path = "out/"
+current_file = None
+current_path = None
 
 #============================
 # Defining all UI Elements
@@ -107,7 +115,7 @@ gui = {}
 layer_gui = []
 clipboard = None
 for i in range(4):
-  highlight_color = [5,19,15,30][i]
+  highlight_color = [5,19,16,30][i]
   lgui = {}
   lgui["wave_label"] = Label((0,0+EDITOR_Y),".Wave",4)
   lgui["wave_editor"] = WaveEditor((8,14+EDITOR_Y,128,64),wave_color=highlight_color)
@@ -182,13 +190,9 @@ gui["layer"] = RadioButton((106,2+EDITOR_Y),["A","B","C","D"],0)
 gui["selected_file"] = Label((2,-3),str(current_file),4)
 gui["save_button"] = Button((168,-2,24,12),"SAVE",4,5,save_dialog)
 gui["load_button"] = Button((140,-2,24,12),"LOAD",4,5,load_dialog)
-#gui["copy_button"] = Button((155,EDITOR_Y+65,4*6,10),"COPY",4,5,copy)
-#gui["paste_button"] = Button((152,EDITOR_Y+75,4*6,10),"PASTE",4,5,paste)
+gui["copy_button"] = Button((155,EDITOR_Y+65,4*6,10),"COPY",4,5,copy)
+gui["paste_button"] = Button((152,EDITOR_Y+75,4*6,10),"PASTE",4,5,paste)
 
-try:
-  load("out/live.sfz")
-except:
-  pass
 editor_selected = None
 exit = False
 
