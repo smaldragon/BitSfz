@@ -12,6 +12,8 @@ import wave_gen
 import sfz_gen
 from colors import *
 
+VERSION = "v0.01"
+
 #============================
 # I/O Functions
 #============================
@@ -192,6 +194,7 @@ gui["save_button"] = Button((168,-2,24,12),"SAVE",4,5,save_dialog)
 gui["load_button"] = Button((140,-2,24,12),"LOAD",4,5,load_dialog)
 gui["copy_button"] = Button((155,EDITOR_Y+65,4*6,10),"COPY",4,5,copy)
 gui["paste_button"] = Button((152,EDITOR_Y+75,4*6,10),"PASTE",4,5,paste)
+gui["version_label"] = Label((162,180),VERSION,4)
 
 editor_selected = None
 exit = False

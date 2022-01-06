@@ -129,6 +129,8 @@ class NumberEditor(GUIElement):
       self._draw_value()
 
       self.edit_timer = 0
+      self.first_click = True
+      self._selected = False
   def update(self):
     self._draw_value()
   def _draw_value(self):
@@ -139,6 +141,14 @@ class NumberEditor(GUIElement):
   def draw(self):
       canvas.blit(self.rendered_arrows,(self.rect[0],self.rect[1]))
       canvas.blit(self.rendered_text,(self.rect[0]+6,self.rect[1]))
+  @property
+  def selected(self):
+      return self._selected
+  @selected.setter
+  def selected(self,v):
+    self.first_click = True
+    self.edit_timer = 0
+    self._selected = v
   def edit(self):
     if time.time() > self.edit_timer:
       mx,my = get_canvas_mouse_pos()
@@ -153,7 +163,10 @@ class NumberEditor(GUIElement):
         self.value = self.max_value
       self._draw_value()
       pressed = pygame.key.get_pressed()
-      if pressed[pygame.K_LCTRL]:
+      if self.first_click:
+        self.first_click = False
+        self.edit_timer = time.time() + 0.5
+      elif pressed[pygame.K_LCTRL]:
         self.edit_timer = time.time() + 0.002
       elif pressed[pygame.K_LSHIFT]:
         self.edit_timer = time.time() + 0.1
