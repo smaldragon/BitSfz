@@ -135,7 +135,7 @@ class NumberEditor(GUIElement):
     self._draw_value()
   def _draw_value(self):
     extra = ""
-    if self.value < 10:
+    if self.value < 10 and self.value >= 0:
       extra="0"
     self.rendered_text = font.render(f'{extra}{str(self.value)}',True,COLORS[3])
   def draw(self):
@@ -211,3 +211,29 @@ class Button(Label):
                 self.function(self.args)
             else:
                 self.function()
+class ToggleBox(GUIElement):
+  def __init__(self, rect,value,box_color=3,check_color=4) -> None:
+      super().__init__((rect[0],rect[1],11,11))
+      self.value=value
+      self._selected = False
+      
+      self.box_color=box_color
+      self.check_color=check_color
+
+      self.rendered_check=font.render("x",True,COLORS[self.check_color])
+  @property
+  def selected(self):
+      return self._selected
+  @selected.setter
+  def selected(self,v):
+    self.first_click = True
+    self.edit_timer = 0
+    self._selected = v
+    if v==True:
+      self.value = not self.value
+      print("Selected")
+  
+  def draw(self):
+    pygame.draw.rect(canvas,COLORS[self.box_color],(self.rect[0]+2,self.rect[1]+2,7,7),width=1)
+    if self.value:
+      canvas.blit(self.rendered_check,(self.rect[0]+3,self.rect[1]-3))

@@ -53,9 +53,14 @@ def generate_file(filename,directory,data):
                 f.write(f'pitchlfo_freq={settings["pitchlfo_freq"].value}\n')
 
                 f.write(f'volume={(settings["volume"].value-93)}\n')
-                f.write(f'transpose={settings["transpose"].value-50}\n')
+                f.write(f'transpose={settings["transpose"].value+settings["octave"].value*12}\n')
                 f.write(f'tune={(settings["tune"].value-50)*2}\n')
                 f.write(f'pan={settings["pan"].value-50}\n')
+                
+                keycenter=57
+                if settings["fixed"].value:
+                    f.write(f'pitch_keytrack=0\n')
+                    keycenter=57+settings["transpose"].value+settings["octave"].value*12
 
                 n = filename[:-4]
                 l = ["A","B","C","D"][i]
@@ -64,9 +69,14 @@ def generate_file(filename,directory,data):
                     if settings["wave_editor"].value == [noi]*32:
                         noise = True
                         if noi > 0:
-                            f.write(f"<region> sample=samples/{n}_{l}_N.wav lokey=0 hikey=127 pitch_keycenter={57}")
+                            f.write(f"<region> sample=samples/{n}_{l}_N.wav lokey=0 hikey=127 pitch_keycenter={keycenter}")
                             f.write("\n")
                 if not noise:
-                    for u in range(6):
-                        f.write(f"<region> sample=samples/{n}_{l}_{u}.wav lokey={REGION_NOTES[u][0]} hikey={REGION_NOTES[u][1]} pitch_keycenter={57}")
-                        f.write("\n")
+                    if not settings["fixed"].value:
+                        for u in range(6):
+                            f.write(f"<region> sample=samples/{n}_{l}_{u}.wav lokey={REGION_NOTES[u][0]} hikey={REGION_NOTES[u][1]} pitch_keycenter={keycenter}")
+                            f.write("\n")
+                    else:
+                        for u,region in enumerate(REGION_NOTES):
+                            if region[0]<=keycenter and region[1]>=keycenter:
+                                 f.write(f"<region> sample=samples/{n}_{l}_{u}.wav lokey=0 hikey=127 pitch_keycenter={keycenter}")

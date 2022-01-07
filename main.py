@@ -12,7 +12,7 @@ import wave_gen
 import sfz_gen
 from colors import *
 
-VERSION = "v0.01"
+VERSION = "v0.02"
 
 #============================
 # I/O Functions
@@ -78,7 +78,7 @@ def gather_data(layer):
   for element_name in lgui:
     element=lgui[element_name]
     if element.value is not None:
-      if type(element.value) in (int,float,str):
+      if type(element.value) in (int,float,str,bool):
         data[element_name] = element.value
       elif type(element.value) is list:
         data[element_name] = element.value.copy()
@@ -98,6 +98,8 @@ def paste():
         layer_gui[gui["layer"].value][element].update()
       elif type(value) is list:
         layer_gui[gui["layer"].value][element].value = value.copy()
+      else:
+        layer_gui[gui["layer"].value][element].value = value 
 
 #current_file = "live.sfz"
 #current_path = "out/"
@@ -174,9 +176,11 @@ for i in range(4):
   lgui["pan"]=NumberEditor((164,EDITOR_Y+20),50,arrow_color=highlight_color)
   lgui["side_desc1"]=Label((143,EDITOR_Y+30),"Vol Pan",2)
   lgui["tune"]=NumberEditor((140,EDITOR_Y+40),50,arrow_color=highlight_color)
-  lgui["transpose"]=NumberEditor((164,EDITOR_Y+40),50,arrow_color=highlight_color)
-  lgui["side_desc2"]=Label((143,EDITOR_Y+50),"Tun Tra",2)
-
+  lgui["octave"]=NumberEditor((164,EDITOR_Y+40),0,arrow_color=highlight_color,min_value=-9,max_value=9)
+  lgui["side_desc2"]=Label((143,EDITOR_Y+50),"Tun Oct",2)
+  lgui["transpose"]=NumberEditor((140,EDITOR_Y+60),0,min_value=0,max_value=11,arrow_color=highlight_color)
+  lgui["fixed"]=ToggleBox((170,EDITOR_Y+62),False,box_color=highlight_color,check_color=3)
+  lgui["side_desc3"]=Label((143,EDITOR_Y+70),"Tra Fix",2)
   
   lgui["pitchlfo_label"] = Label((0,150+EDITOR_Y),".Vibrato",4)
   lgui["pitchlfo_delay"]=NumberEditor((0,160+EDITOR_Y),0,arrow_color=highlight_color)
@@ -192,8 +196,8 @@ gui["layer"] = RadioButton((106,2+EDITOR_Y),["A","B","C","D"],0)
 gui["selected_file"] = Label((2,-3),str(current_file),4)
 gui["save_button"] = Button((168,-2,24,12),"SAVE",4,5,save_dialog)
 gui["load_button"] = Button((140,-2,24,12),"LOAD",4,5,load_dialog)
-gui["copy_button"] = Button((155,EDITOR_Y+65,4*6,10),"COPY",4,5,copy)
-gui["paste_button"] = Button((152,EDITOR_Y+75,4*6,10),"PASTE",4,5,paste)
+gui["copy_button"] = Button((155,EDITOR_Y+80,4*6,10),"COPY",4,5,copy)
+gui["paste_button"] = Button((152,EDITOR_Y+90,4*6,10),"PASTE",4,5,paste)
 gui["version_label"] = Label((162,180),VERSION,4)
 
 editor_selected = None
