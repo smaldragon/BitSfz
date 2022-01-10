@@ -6,5 +6,5 @@ echo "2- Building wave library"
 cc -fPIC -shared -o dist/libWave.so wave_gen.c
 echo "3- Copying assets"
 cp -R assets dist/assets
-echo "4- Making Instruments Folder"
-mkdir dist/instruments
+echo "4- Copying example instruments"
+cp -R instruments dist/instruments

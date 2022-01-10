@@ -1,6 +1,6 @@
 import wave
 import pygame
-from colors import *
+from config import *
 import time
 pygame.init()
 

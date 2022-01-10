@@ -1,5 +1,6 @@
 import os
 import random
+from config import VERSION
 
 REGION_NOTES = [
     (0,47), 
@@ -17,7 +18,7 @@ def convert(value):
 def generate_file(filename,directory,data):
     #os.makedirs(path, exist_ok=True)
     with open(f"{directory+'/'+filename}","w") as f:
-        f.write("// Auto Generated file by sfz_gen.py\n")
+        f.write(f"// Auto Generated file by sfz_gen.py |{VERSION}\n")
         f.write("//")
         for l in range(4):
             for i,name in enumerate(data[l]):

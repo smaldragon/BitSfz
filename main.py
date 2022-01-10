@@ -10,9 +10,7 @@ import os
 from ui import *
 import wave_gen
 import sfz_gen
-from colors import *
-
-VERSION = "v0.02"
+from config import *
 
 #============================
 # I/O Functions
@@ -59,7 +57,8 @@ def load(path):
 def save_dialog():
   types = [('SFZ File', '.sfz')]
   path=filedialog.asksaveasfilename(filetypes = types, defaultextension = ".sfz")
-  if path != ():
+  if type(path) == str and path != "":
+    print(path)
     split = path.split("/")
     filename=split[-1]
     directory=path[:-len(filename)]
@@ -68,7 +67,7 @@ def save_dialog():
 def load_dialog():
   types = [('SFZ File', '.sfz')]
   path=filedialog.askopenfilename(filetypes=types)
-  if path != ():
+  if type(path) == str and path != "":
     load(path)
 
 def gather_data(layer):
